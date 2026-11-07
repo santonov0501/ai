@@ -1,10 +1,14 @@
-def main():
-    return 'Hello, World!'
+import config
+import subprocess
+import sys
 
-def false_main():
-    print("Hello, False World!")
-    return 'Hello, False World!'
-false_main()
+print(subprocess.run([sys.executable, 'config.py']))
+
+
+def main():
+    settings = f"SITE_LAT={config.SITE_LAT}, SITE_LON={config.SITE_LON}, HEAT_THRESHOLD={config.HEAT_THRESHOLD}, LOG_LEVEL={config.LOG_LEVEL}"
+    return print(settings)
+
 
 if __name__ == "__main__":
     main()

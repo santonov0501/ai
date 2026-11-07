@@ -32,6 +32,26 @@ print(SITE_LAT, SITE_LON, HEAT_THRESHOLD, LOG_LEVEL)
 ```
 
 ## 0.1.6
-1. Хардкодить значения секретов - нельзя, даже приватный репозиторий не гарантирует защищенности данных. Например можно перехватить их по сети. 
-2. Вернет True, `bool(os.getenv("DEBUG"))` проверяет наличие переменной окружения в .env. Чтобы вывести значение `DEBUG` - нужно убрать `bool()`, а вывести просто `os.getenv("DEBUG")`.
+1. доступ к репо есть у многих (коллеги, CI, форки), и его могут случайно сделать публичным;
+история git хранит секрет навсегда, даже если потом его удалить;
+на разных окружениях разные ключи, а в коде пришлось бы хранить их все. 
+2. `os.getenv("DEBUG")` вернёт строку "false". `bool()` от любой непустой строки даёт True, поэтому и `bool("false")`, и `bool("0")` равны `True`. Если убрать `bool()`, получится строка, а не флаг.
 3. Код выполнится в стороннем модуле
+
+## Вывод sys.executable
+`CompletedProcess(args=['C:\\repos\\ai\\.venv\\Scripts\\python.exe', 'config.py'], returncode=0)`
+
+## Вывод git status
+```
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   .env.example
+        modified:   .gitignore
+        modified:   README.md
+        modified:   config.py
+        modified:   main.py
+        modified:   requirements.txt
+```
