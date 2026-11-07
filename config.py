@@ -2,31 +2,32 @@ import os
 from dotenv import load_dotenv
 
 
+class ConfigError(Exception):
+    """Ошибка в настройках приложения."""
+
 load_dotenv()
 
-def _require(name: str) -> str:
-    value = os.getenv(name)
-    if name == "LOG_LEVEL" and (value is None or value == ""):
-        value = "INFO"
-    if name == "HEAT_THRESHOLD" and (value is None or value == ""):
-        value = "5.0"
-    elif  value is None or value == "":
-        raise RuntimeError(f"Не задана переменная окружения {name}. Скопируй .env.example в .env и заполни.")
+def _get_str(name, default=None) -> str:
+    raw = os.getenv(name)
+    if raw is None or raw.strip() == "":
+        if default is None:
+            raise ConfigError(f"Не задана переменная {name}")
+        return default
+    return raw
 
-        
-        
-    return value
 
-def site_coordinates(name: str) -> float:
-    try:
-        return float(_require(name))
+
+def _get_float(name, default=None) -> float:
+    raw = os.getenv(name)
+    if raw is None or raw.strip() == "":
+        if default is None:
+            raise ConfigError(f"Не задана переменная {name}")
+        return default
+    try: 
+        return float(raw.replace(",","."))
     except ValueError as e:
-        raise RuntimeError(f"Некорректное значение координат в {name}.") from e
+        raise ConfigError(f"{name} должно быть числом, получено: {raw!r}") from e
 
-SITE_LAT = site_coordinates("SITE_LAT")
-SITE_LON = site_coordinates("SITE_LON")
-HEAT_THRESHOLD = site_coordinates("HEAT_THRESHOLD")
-LOG_LEVEL = _require("LOG_LEVEL")
 
 
 
