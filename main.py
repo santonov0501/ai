@@ -40,23 +40,21 @@ def main() -> int:
         return 2
     
 
+    
+        
+        
     try:
-        test_values = ["5","+5","-3,5","-3.5","","abc",None]
-        for test in test_values:
-            try:
-                temperature = parsing.parse_temperature(test)
-            except ValueError as e:
-                log.error("Ошибка при парсинге температуры: %r", test)
-                continue
+        temperature = parsing.parse_temperature("121452")
+    except ValueError as e:
+        log.error("Ошибка при парсинге температуры: %s", e)
+        return 1
 
-            if temperature is None:
-                log.warning("Не удалось распарсить температуру из входного значения: %r", test)
-                continue
+    if temperature is None:
+        log.info("Не удалось распарсить температуру из входного значения: %s", temperature)
+        return 0
 
-            log.info("Температура объекта: %s°C", temperature)
-    except Exception:
-        log.exception("Ошибка при парсинге температуры")
-        return 2
+    log.info("Температура объекта: %s°C", temperature)
+    
     return 0
     
     
