@@ -11,7 +11,7 @@ def parse_temperature(raw: str | None = None) -> float | None:
     except ValueError as exc:
         raise ValueError(f"Невозможно преобразовать {raw!r} в число") from exc
 
-    if not -90 < temperature < 60:
+    if not -90 <= temperature <= 60:
         raise ValueError(
             f"Температура должна быть в диапазоне от -90 до 60 градусов Цельсия, получено: {raw!r}"
         )

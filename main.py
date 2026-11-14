@@ -28,9 +28,9 @@ def main() -> int:
     
     try:
         settings = config.load_settings()
-        SITE_LAT = settings['SITE_LAT']
-        SITE_LON = settings['SITE_LON']
-        HEAT_THRESHOLD = settings['HEAT_THRESHOLD']
+        SITE_LAT = settings.site_lat
+        SITE_LON = settings.site_lon
+        HEAT_THRESHOLD = settings.heat_threshold
         log.info("Координаты объекта: %s, %s. Тепловой порог: %s°C", SITE_LAT, SITE_LON, HEAT_THRESHOLD)
     except ConfigError as e:
         log.error("Ошибка конфигурации: %s", e)
@@ -44,7 +44,7 @@ def main() -> int:
         
         
     try:
-        temperature = parsing.parse_temperature("121452")
+        temperature = parsing.parse_temperature()
     except ValueError as e:
         log.error("Ошибка при парсинге температуры: %s", e)
         return 1
