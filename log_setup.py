@@ -1,21 +1,21 @@
 import os 
 import logging
-from dotenv import load_dotenv
-load_dotenv()
+import config
+
 
 def setup_logging(level: str | None = None) -> None:
     if level is None:
-        level = os.getenv("LOG_LEVEL", "INFO")
+        level = os.getenv("LOG_LEVEL") or "INFO"
     level = level.strip().upper()
     levels = {
         "DEBUG": logging.DEBUG,
         "INFO": logging.INFO,
         "WARNING": logging.WARNING,
         "ERROR": logging.ERROR,
-        "CRITICAL": logging.CRITICAL,
+        "CRITICAL": logging.CRITICAL
     }
     if level not in levels:
-        raise ValueError(f"Неизвестный уровень логирования: {level!r}.")
+        raise config.ConfigError(f"Неизвестный уровень логирования: {level!r}.")
 
     logging.basicConfig(
         level=levels[level],

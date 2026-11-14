@@ -28,8 +28,15 @@ def _get_float(name, default=None) -> float:
     except ValueError as e:
         raise ConfigError(f"{name} должно быть числом, получено: {raw!r}") from e
 
+def load_settings() -> dict:
+    settings = {}
 
+    try:
+        settings['SITE_LAT'] = _get_float('SITE_LAT')
+        settings['SITE_LON'] = _get_float('SITE_LON')
+        settings['HEAT_THRESHOLD'] = _get_float('HEAT_THRESHOLD', 5)
+    except ConfigError as e:
+        raise ConfigError(f"Ошибка при загрузке настроек: {e}")
 
-
-
+    return settings
 
