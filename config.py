@@ -12,13 +12,12 @@ class ConfigError(Exception):
 class Settings:
     site_lat: float 
     site_lon: float 
-    heat_threshold: float = 5.0 
-    log_level: str = "INFO"
+    heat_threshold: float = 5.0
 
     def __post_init__(self):
-        if not -90 <= self.site_lat <= 90:
+        if not -90 <= float(self.site_lat) <= 90:
             raise ConfigError(f"Широта должна быть в диапазоне от -90 до 90, получено: {self.site_lat}")
-        if not -180 <= self.site_lon <= 180:
+        if not -180 <= float(self.site_lon) <= 180:
             raise ConfigError(f"Долгота должна быть в диапазоне от -180 до 180, получено: {self.site_lon}")
 
         
