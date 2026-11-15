@@ -22,6 +22,8 @@ def test_missing_env(monkeypatch):
         config.load_settings()
 
 def test_default_heat_threshold(monkeypatch):
+    monkeypatch.setenv("SITE_LAT", "55.4")
+    monkeypatch.setenv("SITE_LON", "23.5")
     monkeypatch.delenv("HEAT_THRESHOLD", raising=False)
     
     settings = config.load_settings()
@@ -29,11 +31,38 @@ def test_default_heat_threshold(monkeypatch):
     assert settings.heat_threshold == 5.0
     assert type(settings.heat_threshold) == float
 
-def test_invalid_points(monkeypatch):
-    monkeypatch.setenv("SITE_LAT", "abc")
-    monkeypatch.setenv("SITE_LAT", "155")
-    monkeypatch.setenv("SITE_LON", "xyz")
-    monkeypatch.setenv("SITE_LON", "200")
-    
-    with pytest.raises(ConfigError):
+
+@pytest.mark.parametrize(
+    ("name", "value"),
+    [
+        ("SITE_LAT", "abc"),
+        ("SITE_LON", "xyz"),
+    ],
+)
+def test_invalid_point_format(monkeypatch, name, value):
+    monkeypatch.setenv("SITE_LAT", "55.4")
+    monkeypatch.setenv("SITE_LON", "23.5")
+    monkeypatch.setenv(name, value)
+
+    with pytest.raises(ConfigError) as exc_info:
         config.load_settings()
+
+    assert isinstance(exc_info.value.__cause__, ValueError)
+
+
+@pytest.mark.parametrize(
+    ("name", "value"),
+    [
+        ("SITE_LAT", "155"),
+        ("SITE_LON", "200"),
+    ],
+)
+def test_point_out_of_range(monkeypatch, name, value):
+    monkeypatch.setenv("SITE_LAT", "55.4")
+    monkeypatch.setenv("SITE_LON", "23.5")
+    monkeypatch.setenv(name, value)
+
+    with pytest.raises(ConfigError) as exc_info:
+        config.load_settings()
+
+    assert exc_info.value.__cause__ is None

@@ -1,6 +1,5 @@
 import sys
 import logging
-import pytest
 
 
 def main() -> int:
@@ -40,29 +39,9 @@ def main() -> int:
         log.exception("Непредвиденная ошибка")
         return 2
     
-    # try:
-    #     temperature = parsing.parse_temperature()
-    # except ValueError as e:
-    #     log.error("Ошибка при парсинге температуры: %s", e)
-    #     return 1
-
-    # if temperature is None:
-    #     log.info("Не удалось распарсить температуру из входного значения: %s", temperature)
-    #     return 0
-
-    # log.info("Температура объекта: %s°C", temperature)
-    
     return 0
     
     
 
 if __name__ == "__main__":
-    test_result = pytest.main()
-    if test_result != 0:
-        import log_setup
-        log_setup.setup_logging()
-        log = logging.getLogger(__name__)
-        log.warning("Тесты не прошли, завершение работы с кодом ошибки: %s", test_result)
-        sys.exit(test_result)
-    else:
         sys.exit(main())
